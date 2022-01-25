@@ -39,6 +39,7 @@ class SubscriptionHandler {
   late Stream<bool> _readyStream;
   final String subName;
   final List<dynamic> args;
+  dynamic lastMessage;
   SubscriptionHandler(this.ddpClient, this.subId, this.subName, this.args) {
     _readyStream = _readyStreamController.stream.asBroadcastStream();
     _readyStreamController.sink.add(false);
@@ -85,7 +86,7 @@ class DdpClient {
 
   final StreamController<DdpConnectionStatus> _statusStreamController =
       StreamController();
-  StreamController<dynamic> dataStreamController = StreamController();
+  StreamController<dynamic> dataStreamController = StreamController.broadcast();
   late DdpConnectionStatus _connectionStatus;
   String url;
   String userAgent;
@@ -102,6 +103,8 @@ class DdpClient {
   final Map<String, SubscriptionHandler> _subscriptionHandlers = {};
   bool _isTryToReconnect = true;
   Timer? _scheduleReconnectTimer;
+
+  bool hasMeteorStreamerEventListeners = false;
 
   final bool debug;
 
@@ -344,6 +347,7 @@ class DdpClient {
   }
 
   void _sendMsgSub(String id, String name, List<dynamic> params) {
+    
     if (_socket != null) {
       var data = {
         'msg': 'sub',
@@ -352,6 +356,7 @@ class DdpClient {
         'id': id,
       };
       var msg = json.encode(data);
+      print('sending sub message $msg');
       printDebug('Send: $msg');
       _socket!.add(msg);
     }

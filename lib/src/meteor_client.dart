@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:dart_meteor_streamer/src/streamer.dart';
 import 'package:rxdart/rxdart.dart';
 import 'ddp_client.dart';
 
@@ -61,6 +62,7 @@ enum UserLogInStatus {
 
 class MeteorClient {
   late DdpClient connection;
+  final StreamerCentral streamerCentral = StreamerCentral();
 
   final BehaviorSubject<DdpConnectionStatus> _statusSubject = BehaviorSubject();
   late Stream<DdpConnectionStatus> _statusStream;

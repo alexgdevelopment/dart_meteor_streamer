@@ -4,3 +4,4 @@ library dart_meteor;
 
 export 'src/meteor_client.dart';
 export 'src/ddp_client.dart';
+export 'src/streamer.dart';
